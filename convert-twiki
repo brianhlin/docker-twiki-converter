@@ -1,0 +1,10 @@
+#!/bin/bash
+
+TWIKI=$1
+MARKDOWN=$2
+
+TITLE=$(basename "$TWIKI")
+ARCHIVE=docs/archive/$TITLE
+
+gettwikipage "$TWIKI" > $ARCHIVE
+pandoc -f twiki -t markdown_github $ARCHIVE > $TITLE.md

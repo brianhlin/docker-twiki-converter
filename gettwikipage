@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+from __future__ import print_function
+
+'''Get the raw twiki markup of a page of the OSG twiki.
+Requirements: Python 2.6+ and the lxml library (pip install lxml)
+'''
+
+# Adapted from http://docs.python-guide.org/en/latest/scenarios/scrape/
+
+import sys
+
+from lxml import html
+
+try:
+    from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
+
+TWIKI = "https://twiki.grid.iu.edu"
+
+TWIKI_ENCODING = "windows-1252"
+
+TEXTAREA_XPATH = '//textarea[@class="twikiTextarea twikiTextareaRawView"]/text()'
+
+
+def get_twiki_page_url(pagename, raw=True):
+    url = TWIKI + "/bin/view/" + pagename.replace('.', '/')
+    if raw:
+        return url + "?raw=on"
+    else:
+        return url
+
+
+def get_page_tree(url):
+    page_text = urlopen(url).read()
+    tree = html.fromstring(page_text.decode(TWIKI_ENCODING, errors='xmlcharrefreplace'))
+
+    return tree
+
+
+def get_raw_text(tree):
+    try:
+        return tree.xpath(TEXTAREA_XPATH)[0].encode('utf_8', errors='ignore')
+    except IndexError:
+        return ''
+
+
+def get_header(pagename):
+    return "{0} ({1})".format(pagename.replace('/', '.'), get_twiki_page_url(pagename, raw=False))
+
+
+def is_missing_page(text):
+    return not text or 'NOTE: This Wiki topic does not exist yet' in text
+
+
+def output_page(pagename, tree, outfile):
+    print(get_header(pagename) + "\n", file=outfile)
+    print(get_raw_text(tree), file=outfile)
+
+
+def main(argv):
+    try:
+        pagename = argv[1]
+    except IndexError:
+        print("Usage: {0} <twiki page name> [<output file>]".format(argv[0]))
+
+    page_url = get_twiki_page_url(pagename, raw=False)
+    raw_url = get_twiki_page_url(pagename, raw=True)
+
+    try:
+        tree = get_page_tree(raw_url)
+    except urllib2.URLError as err:
+        print("Error fetching page: " + str(err), file=sys.stderr)
+        return 1
+
+    text = get_raw_text(tree)
+    if is_missing_page(text):
+        print("Page at {0} does not exist".format(page_url), file=sys.stderr)
+        return 1
+
+    if len(argv) > 2 and argv[2] != '-':
+        with open(argv[2], 'w') as outfile:
+            output_page(pagename, tree, outfile)
+    else:
+        output_page(pagename, tree, sys.stdout)
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv))
+
