@@ -10,4 +10,4 @@ RUN pip install mkdocs MarkdownHighlight pygments
 COPY convert-twiki /usr/local/bin/
 
 ENTRYPOINT []
-CMD mkdocs serve --dev-addr 0.0.0.0:8000
+CMD PYTHONPATH=src/ mkdocs serve --dev-addr 0.0.0.0:8000
