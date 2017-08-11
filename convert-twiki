@@ -6,5 +6,6 @@ MARKDOWN=$2
 TITLE=$(basename "$TWIKI")
 ARCHIVE=docs/archive/$TITLE
 
-gettwikipage "$TWIKI" > $ARCHIVE
+curl  "$TWIKI?raw=text" | iconv -f windows-1252 > $ARCHIVE
 pandoc -f twiki -t markdown_github $ARCHIVE > $TITLE.md
+
