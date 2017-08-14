@@ -5,7 +5,7 @@ Requirements
 ------------
 
 * A host with a running docker service
-* `sudo` or membership in the `docker group`
+* `sudo` or membership in the `docker` group
 
 Building the image
 ------------------
