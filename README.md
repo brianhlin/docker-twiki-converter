@@ -52,7 +52,7 @@ Convert documents
 You can convert documents using the container ID of your running server:
 
 ```console
-$ docker exec convert-twiki <CONTAINER ID> <TWIKI URL>
+$ docker exec <CONTAINER ID> convert-twiki <TWIKI URL>
 ```
 
 Where <TWIKI URL> is the link to the TWiki document that you want to convert, e.g. https://twiki.opensciencegrid.org/bin/view/SoftwareTeam/SoftwareDevelopmentProcess. This will result in an archive of the twiki doc, `docs/archive/SoftwareDevelopmentProcess`, in your local repo and a converted copy placed into the root of your local github repository.
