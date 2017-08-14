@@ -8,6 +8,7 @@ RUN apt-get update -y \
 RUN pip install mkdocs MarkdownHighlight pygments
 
 COPY convert-twiki /usr/local/bin/
+COPY osg-conversions.py /usr/local/bin/
 
 ENTRYPOINT []
 CMD PYTHONPATH=src/ mkdocs serve --dev-addr 0.0.0.0:8000
