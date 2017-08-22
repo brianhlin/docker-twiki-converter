@@ -12,8 +12,6 @@ twiki = re.sub('<span class="twiki-macro UCL\_PROMPT\_ROOT"></span>', '[root@cli
 twiki = re.sub('<span class="twiki-macro UCL\_PROMPT"></span>', '[user@client ~] $', twiki)
 twiki = re.sub('%UCL_PROMPT_ROOT%', '[root@client ~] $', twiki)
 twiki = re.sub('%UCL_PROMPT%', '[user@client ~] $', twiki)
-twiki = re.sub('%RED%', '', twiki)
-twiki = re.sub('%ENDCOLOR%', '', twiki)
 twiki = re.sub('&lt;', '<', twiki)
 twiki = re.sub('&gt;', '>', twiki)
 twiki = re.sub('<span class="twiki-macro RED"></span> \*\*NOTE:\*\* <span class="twiki-macro ENDCOLOR"></span>',
