@@ -4,7 +4,7 @@ TWIKI=$1
 MARKDOWN=$2
 
 TITLE=$(basename "$TWIKI")
-ARCHIVE=docs/archive/$TITLE
+ARCHIVE=archive/$TITLE
 
 curl  "$TWIKI?raw=text" | iconv -f windows-1252 > $ARCHIVE
 pandoc -f twiki -t markdown_github $ARCHIVE | osg-conversions.py > $TITLE.md
