@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 TWIKI=$1
 MARKDOWN=$2
@@ -6,6 +8,18 @@ MARKDOWN=$2
 TITLE=$(basename "$TWIKI")
 ARCHIVE=archive/$TITLE
 
+tmo_msg () (
+  set +e
+  timeout 10 "$@"
+  local e=$?
+  if [[ $e -eq 124 ]]; then
+    echo "$1 command timed out" >&2
+    exit $e
+  fi
+  return $e
+)
+
 curl  "$TWIKI?raw=text" | iconv -f windows-1252 > $ARCHIVE
+tmo_msg \
 pandoc -f twiki -t markdown_github $ARCHIVE | osg-conversions.py > $TITLE.md
 
