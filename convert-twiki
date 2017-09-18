@@ -2,11 +2,23 @@
 set -e
 set -o pipefail
 
-TWIKI=$1
-MARKDOWN=$2
+usage () {
+  echo "usage: $(basename "$0") TWIKI-URL [PATH-TO-MARKDOWN.md]"
+  exit 1
+}
 
+[[ $1 = https://twiki.opensciencegrid.org/* ]] || usage
+
+TWIKI=$1
 TITLE=$(basename "$TWIKI")
 ARCHIVE=archive/$TITLE
+
+case $2 in
+    '' ) MARKDOWN=$TITLE.md ;;
+  *.md ) MARKDOWN=$2 ;;
+     * ) echo "PATH-TO-MARKDOWN does not end in .md" >&2
+         usage ;;
+esac
 
 tmo_msg () (
   set +e
@@ -19,7 +31,8 @@ tmo_msg () (
   return $e
 )
 
-curl  "$TWIKI?raw=text" | iconv -f windows-1252 > $ARCHIVE
+mkdir -p "$(dirname "$MARKDOWN")"
+curl -s --show-error "$TWIKI?raw=text" | iconv -f windows-1252 > "$ARCHIVE"
 tmo_msg \
-pandoc -f twiki -t markdown_github $ARCHIVE | osg-conversions.py > $TITLE.md
+pandoc -f twiki -t markdown_github "$ARCHIVE" | osg-conversions.py > "$MARKDOWN"
 

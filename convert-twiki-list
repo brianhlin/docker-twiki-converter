@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+usage () {
+  echo "usage: $(basename "$0") TWIKI-TO-MD-FILE"
+  echo
+  echo "TWIKI-TO-MD-FILE contains lines of the form:"
+  echo "TWIKI-URL PATH-TO-MARKDOWN.md"
+  echo "as accepted by the convert-twiki script"
+  exit
+}
+
+[[ -r $1 ]] || usage
+
+while read twiki_url md_path; do
+  "$(dirname "$0")"/convert-twiki "$twiki_url" "$md_path" < /dev/null
+done < "$1"
+
