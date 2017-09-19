@@ -14,6 +14,7 @@ twiki = re.sub('%UCL_PROMPT_ROOT%', 'root@host #', twiki)
 twiki = re.sub('%UCL_PROMPT%', 'user@host $', twiki)
 twiki = re.sub('&lt;', '<', twiki)
 twiki = re.sub('&gt;', '>', twiki)
+twiki = re.sub('<span class="twiki-macro NOTE"></span>', '!!! note\n   ', twiki)
 twiki = re.sub('<span class="twiki-macro RED"></span> \*\*NOTE:\*\* <span class="twiki-macro ENDCOLOR"></span>',
                '!!! note\n   ', twiki)
 
