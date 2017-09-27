@@ -10,7 +10,12 @@ usage () {
 [[ $1 = https://twiki.opensciencegrid.org/* ]] || usage
 
 TWIKI=$1
-TITLE=$(basename "$TWIKI")
+revpat='\?rev=([0-9]+)$'
+if [[ $TWIKI =~ $revpat ]]; then
+  REV=${BASH_REMATCH[1]}
+  TWIKI=${TWIKI%\?rev=*}
+fi
+TITLE=$(basename "$TWIKI")${REV:+.r$REV}
 ARCHIVE=archive/$TITLE
 
 case $2 in
@@ -32,7 +37,7 @@ tmo_msg () (
 )
 
 mkdir -p "$(dirname "$MARKDOWN")"
-curl -s --show-error "$TWIKI?raw=text" | iconv -f windows-1252 > "$ARCHIVE"
+curl -s --show-error "$TWIKI?raw=text${REV:+&rev=$REV}" | iconv -f windows-1252 > "$ARCHIVE"
 tmo_msg \
 pandoc -f twiki -t markdown_github "$ARCHIVE" | osg-conversions.py > "$MARKDOWN"
 
