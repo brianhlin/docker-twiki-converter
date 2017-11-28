@@ -25,6 +25,9 @@ case $2 in
          usage ;;
 esac
 
+# optional link map file
+LINK_MAP=$3
+
 tmo_msg () (
   set +e
   timeout 60 "$@"
@@ -36,8 +39,11 @@ tmo_msg () (
   return $e
 )
 
-mkdir -p "$(dirname "$MARKDOWN")"
+for files in $MARKDOWN $ARCHIVE; do
+    mkdir -p "$(dirname "$files")"
+done
+
 curl -s --show-error "$TWIKI?raw=text${REV:+&rev=$REV}" | iconv -f windows-1252 > "$ARCHIVE"
 tmo_msg \
-pandoc -f twiki -t markdown_github "$ARCHIVE" | osg-conversions.py > "$MARKDOWN"
+pandoc -f twiki -t markdown_github "$ARCHIVE" | osg-conversions.py $LINK_MAP > "$MARKDOWN"
 
