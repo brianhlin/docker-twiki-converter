@@ -12,7 +12,15 @@ usage () {
 
 [[ -r $1 ]] || usage
 
+FAILURES=''
 while read twiki_url md_path; do
-  "$(dirname "$0")"/convert-twiki "$twiki_url" "$md_path" < /dev/null
+    echo "Converting $twiki_url..."
+    "$(dirname "$0")"/convert-twiki "$twiki_url" "$md_path" "$1" < /dev/null
+    [ $? -eq 0 ] || FAILURES+="$twiki_url "
 done < "$1"
 
+if [[ -n "$FAILURES" ]]; then
+    echo
+    echo "Failed to convert the following URLs:"
+    tr ' ' '\n' <<< $FAILURES
+fi
