@@ -5,7 +5,7 @@ usage () {
   echo "usage: $(basename "$0") TWIKI-TO-MD-FILE"
   echo
   echo "TWIKI-TO-MD-FILE contains lines of the form:"
-  echo "TWIKI-URL PATH-TO-MARKDOWN.md"
+  echo "TWIKI-URL PATH-TO-MARKDOWN-RELATIVE-TO-DOCS.md"
   echo "as accepted by the convert-twiki script"
   exit
 }
