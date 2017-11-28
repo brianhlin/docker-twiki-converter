@@ -49,10 +49,14 @@ Meaning that the mkdocs server should be accessible on port 32774 of the docker 
 Convert documents
 ------------------
 
-You can convert documents using the container ID of your running server:
+1. Create a link map file in the root of your local git repository with the following format:
 
-```console
-$ docker exec <CONTAINER ID> convert-twiki <TWIKI URL>
-```
+        <TWIKI URL> <PATH TO MARKDOWN FILE>
 
-Where <TWIKI URL> is the link to the TWiki document that you want to convert, e.g. https://twiki.opensciencegrid.org/bin/view/SoftwareTeam/SoftwareDevelopmentProcess. This will result in an archive of the twiki doc, `docs/archive/SoftwareDevelopmentProcess`, in your local repo and a converted copy placed into the root of your local github repository.
+    Where `<TWIKI URL>` is the link to the TWiki document that you want to convert, e.g. https://twiki.opensciencegrid.org/bin/view/SoftwareTeam/SoftwareDevelopmentProcess, and `<PATH TO MARKDOWN FILE>` is the path to the converted markdown file, relative to the `docs` directory.
+
+1. Run the conversion script available in your docker container using the link map file created above:
+
+        $ docker exec <CONTAINER ID> convert-twiki-list <LINK MAP FILE>
+
+
